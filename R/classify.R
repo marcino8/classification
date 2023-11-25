@@ -53,13 +53,12 @@ classify <- function(df, target) {
   df.test<-df[-index,]
   target.train<-target[index]
   target.test<-target[-index]
-  this<-list(knn=classify.knn(df.train, df.test, target.train, target.test),
+  this<-structure(class="classify", list(knn=classify.knn(df.train, df.test, target.train, target.test),
              nb=classify.nb(df.train, df.test, target.train, target.test),
              df.train=df.train,
              df.test=df.test,
              target.train=target.train,
-             target.test=target.test)
-  class(this)<-'classify'
+             target.test=target.test))
   return(this)
 }
 
@@ -67,8 +66,8 @@ classify <- function(df, target) {
 #'
 #' @param x classify
 #' @export
-plot.classify<-function(x) {
-  ggplot2::ggplot(x$knn, ggplot2::aes(neighbours))+
+plot.classify<-function(obj, ...) {
+  ggplot2::ggplot(obj$knn, ggplot2::aes(neighbours))+
     ggplot2::geom_line(ggplot2::aes(y=acc.train, colour="train"))+
     ggplot2::geom_line(ggplot2::aes(y=acc.test, colour="test"))+
     ggplot2::geom_point(ggplot2::aes(x=neighbours,y=acc.test))+
@@ -86,14 +85,14 @@ plot.classify<-function(x) {
 #'
 #' @param x classify
 #' @export
-print.classify<-function(x) {
+print.classify<-function(obj, ...) {
   print("Result")
   print("--------------")
   print("Naive Bayess")
-  print(x$nb)
+  print(obj$nb)
   print("--------------")
   print("K Nearest Neighbours")
-  print(x$knn)
+  print(obj$knn)
 }
 
 
@@ -102,14 +101,14 @@ print.classify<-function(x) {
 #'
 #' @param x classify
 #' @export
-summary.classify<-function(x){
+summary.classify<-function(obj, ...){
   print("Train data summary")
-  print(summary(x$df.train))
-  print(summary(x$target.train))
+  print(summary(obj$df.train))
+  print(summary(obj$target.train))
 
   print("Test data summary")
-  print(summary(x$df.test))
-  print(summary(x$target.test))
+  print(summary(obj$df.test))
+  print(summary(obj$target.test))
 }
 
 
